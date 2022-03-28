@@ -163,7 +163,8 @@ $ gist REPORT.md
 Исходные файлы находятся в директории [formatter_lib](formatter_lib).
 В этой директории находятся файлы для статической библиотеки *formatter*.
 Создайте `CMakeList.txt` в директории [formatter_lib](formatter_lib),
-с помощью которого можно будет собирать статическую библиотеку *formatter*.
+с помощью которого можно будет собирать статическую библиотеку *formatter*.  
+![Img}(https://github.com/cr3at1v3annis/lab03/scrins/1.png)  
 
 ### Задание 2
 У компании "Formatter Inc." есть перспективная библиотека,
