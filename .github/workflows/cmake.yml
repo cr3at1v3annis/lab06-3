@@ -33,12 +33,12 @@ jobs:
     - name: HelloWorldApplication CMake
       run: |
         cd hello_world_application
-        cmake ..
+        cmake .
         cmake --build
         
     - name: SolverApplication CMake
       run: |
         cd solver_application
-        cmake ..
+        cmake .
         cmake --build
       
