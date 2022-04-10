@@ -1,0 +1,69 @@
+name: Formatter_app
+
+on:
+  push:
+    branches: 
+    - master
+
+jobs:
+  libraries:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: FormatterLib CMake
+      shell: bash
+      run: |
+        cd formatter_lib
+        cmake -H. -B_build
+        cmake --build _build
+
+    - name: FormatterExLib CMake
+      shell: bash
+      run: |
+        cd formatter_ex_lib
+        cmake -H. -B_build
+        cmake --build _build
+        
+    - name: SolverLib Cmake
+      shell: bash
+      run: |
+        cd solver_lib
+        cmake -H. -B_build
+        cmake --build _build
+        
+  Hello_world:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: HelloWorldApplication CMake
+      shell: bash
+      run: |
+        mkdir _build
+        cd _build
+        cmake ..
+        cmake --build .
+        cd _build/hello_world_application
+        ./hello_world
+        
+  Solver:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: SolverApplication CMake
+      shell: bash
+      run: |
+        mkdir _build2
+        cd _build2
+        cmake ..
+        cmake --build .
+        cd _build2/solver_application
+        ./solve 2 -4 2
+      
