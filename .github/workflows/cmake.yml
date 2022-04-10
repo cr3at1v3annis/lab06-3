@@ -13,18 +13,21 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: FormatterLib CMake
+      shell: bash
       run: |
         cd formatter_lib
         cmake -H. -B_build
         cmake --build _build
 
     - name: FormatterExLib CMake
+      shell: bash
       run: |
         cd formatter_lib
         cmake -H. -B_build
         cmake --build _build
         
     - name: SolverLib Cmake
+      shell: bash
       run: |
         cd solver_lib
         cmake -H. -B_build
@@ -38,6 +41,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: HelloWorldApplication CMake
+      shell: bash
       run: |
         mkdir _build
         cd _build
@@ -54,6 +58,7 @@ jobs:
     - uses: actions/checkout@v2
       
     - name: SolverApplication CMake
+      shell: bash
       run: |
         mkdir _build2
         cd _build2
