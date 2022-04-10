@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.4) #минимально требуемая версия для для сборки CMake
 project(formatter_ex) # название проекта
 
-cmake_minimum_required(VERSION 3.4) #минимально требуемая версия для для сборки CMake
-project(formatter_ex) # название проекта
-
 set(CMAKE_CXX_STANDARD 11) # установка стандартов
 set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
 
