@@ -30,6 +30,13 @@ jobs:
         cmake -H. -B_build
         cmake --build _build
         
+  Hello_world:
+    runs-on: ubuntu-latest
+    needs: [ libraries ]
+    
+    steps:
+    - uses: actions/checkout@v2
+      
     - name: HelloWorldApplication CMake
       run: |
         mkdir _build
@@ -39,6 +46,13 @@ jobs:
         cd _build/hello_world_application
         ./hello_world
         
+  Solver:
+    runs-on: ubuntu-latest
+    needs: [ libraries ]
+    
+    steps:
+    - uses: actions/checkout@v2
+      
     - name: SolverApplication CMake
       run: |
         mkdir _build2
