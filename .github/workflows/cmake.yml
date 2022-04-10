@@ -3,6 +3,7 @@ name: Formatters
 on:
   push:
     branches: [ master ]
+    
 
 jobs:
   libraries:
@@ -22,7 +23,7 @@ jobs:
     - name: FormatterExLib CMake
       shell: bash
       run: |
-        cd formatter_lib
+        cd formatter_ex_lib
         cmake -H. -B_build
         cmake --build _build
         
@@ -43,11 +44,11 @@ jobs:
     - name: HelloWorldApplication CMake
       shell: bash
       run: |
-        mkdir _build
-        cd _build
+        mkdir build1
+        cd build1
         cmake ..
         cmake --build .
-        cd _build/hello_world_application
+        cd build1/hello_world_application
         ./hello_world
         
   Solver:
@@ -60,10 +61,10 @@ jobs:
     - name: SolverApplication CMake
       shell: bash
       run: |
-        mkdir _build2
-        cd _build2
+        mkdir build2
+        cd build2
         cmake ..
         cmake --build .
-        cd _build2/solver_application
+        cd build2/solver_application
         ./solve 2 -4 2
       
