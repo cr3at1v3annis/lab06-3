@@ -11,4 +11,4 @@ add_library(formatter_ex STATIC formatter_ex.cpp formatter_ex.h) # сборка 
 
 target_include_directories(formatter_ex PRIVATE /home/annis/TiMP/lab03/formatter_lib)
 
-target_link_libraries(formatter_ex PUBLIC formatter)
+target_link_libraries(formatter_ex formatter)
