@@ -6,6 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
 
 add_library(formatter_ex STATIC formatter_ex.cpp formatter_ex.h) # сборка библиотеки
 
-target_include_directories(formatter_ex PRIVATE /home/annis/TiMP/lab03/formatter_lib)
+target_include_directories(formatter_ex PUBLIC /home/annis/TiMP/lab03/formatter_lib)
 
 target_link_libraries(formatter_ex formatter)
