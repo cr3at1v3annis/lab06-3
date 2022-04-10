@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10) #минимально требуемая версия для для сборки CMake
+cmake_minimum_required(VERSION 3.4) #минимально требуемая версия для для сборки CMake
 project(hello_world) # название проекта
 
 set(CMAKE_CXX_STANDARD 20) # установка стандартов
