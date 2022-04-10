@@ -48,7 +48,7 @@ jobs:
         cd _build
         cmake ..
         cmake --build .
-        cd _build/hello_world_application
+        cd hello_world_application
         ./hello_world
         
   Solver:
@@ -64,6 +64,6 @@ jobs:
         cd _build2
         cmake ..
         cmake --build .
-        cd _build2/solver_application
+        cd solver_application
         ./solve 2 -4 2
       
