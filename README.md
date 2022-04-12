@@ -1,159 +1,8 @@
-## Laboratory work III
+## Laboratory work III и IV
 
-Данная лабораторная работа посвещена изучению систем автоматизации сборки проекта на примере **CMake**
+Данная лабораторная работа посвещена изучению систем автоматизации сборки проекта на примере **CMake** и **GitHub Actions**
 
-```sh
-$ open https://cmake.org/
-```
 
-## Tasks
-
-- [ ] 1. Создать публичный репозиторий с названием **lab03** на сервисе **GitHub**
-- [ ] 2. Ознакомиться со ссылками учебного материала
-- [ ] 3. Выполнить инструкцию учебного материала
-- [ ] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
-
-## Tutorial
-
-```sh
-$ export GITHUB_USERNAME=<имя_пользователя>
-```
-
-```sh
-$ cd ${GITHUB_USERNAME}/workspace
-$ pushd .
-$ source scripts/activate
-```
-
-```sh
-$ git clone https://github.com/${GITHUB_USERNAME}/lab02.git projects/lab03
-$ cd projects/lab03
-$ git remote remove origin
-$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab03.git
-```
-
-```sh
-$ g++ -std=c++11 -I./include -c sources/print.cpp
-$ ls print.o
-$ nm print.o | grep print
-$ ar rvs print.a print.o
-$ file print.a
-$ g++ -std=c++11 -I./include -c examples/example1.cpp
-$ ls example1.o
-$ g++ example1.o print.a -o example1
-$ ./example1 && echo
-```
-
-```sh
-$ g++ -std=c++11 -I./include -c examples/example2.cpp
-$ nm example2.o
-$ g++ example2.o print.a -o example2
-$ ./example2
-$ cat log.txt && echo
-```
-
-```sh
-$ rm -rf example1.o example2.o print.o
-$ rm -rf print.a
-$ rm -rf example1 example2
-$ rm -rf log.txt
-```
-
-```sh
-$ cat > CMakeLists.txt <<EOF
-cmake_minimum_required(VERSION 3.4)
-project(print)
-EOF
-```
-
-```sh
-$ cat >> CMakeLists.txt <<EOF
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-EOF
-```
-
-```sh
-$ cat >> CMakeLists.txt <<EOF
-add_library(print STATIC \${CMAKE_CURRENT_SOURCE_DIR}/sources/print.cpp)
-EOF
-```
-
-```sh
-$ cat >> CMakeLists.txt <<EOF
-include_directories(\${CMAKE_CURRENT_SOURCE_DIR}/include)
-EOF
-```
-
-```sh
-$ cmake -H. -B_build
-$ cmake --build _build
-```
-
-```sh
-$ cat >> CMakeLists.txt <<EOF
-
-add_executable(example1 \${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.cpp)
-add_executable(example2 \${CMAKE_CURRENT_SOURCE_DIR}/examples/example2.cpp)
-EOF
-```
-
-```sh
-$ cat >> CMakeLists.txt <<EOF
-
-target_link_libraries(example1 print)
-target_link_libraries(example2 print)
-EOF
-```
-
-```sh
-$ cmake --build _build
-$ cmake --build _build --target print
-$ cmake --build _build --target example1
-$ cmake --build _build --target example2
-```
-
-```sh
-$ ls -la _build/libprint.a
-$ _build/example1 && echo
-hello
-$ _build/example2
-$ cat log.txt && echo
-hello
-$ rm -rf log.txt
-```
-
-```sh
-$ git clone https://github.com/tp-labs/lab03 tmp
-$ mv -f tmp/CMakeLists.txt .
-$ rm -rf tmp
-```
-
-```sh
-$ cat CMakeLists.txt
-$ cmake -H. -B_build -DCMAKE_INSTALL_PREFIX=_install
-$ cmake --build _build --target install
-$ tree _install
-```
-
-```sh
-$ git add CMakeLists.txt
-$ git commit -m"added CMakeLists.txt"
-$ git push origin master
-```
-
-## Report
-
-```sh
-$ popd
-$ export LAB_NUMBER=03
-$ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
-$ mkdir reports/lab${LAB_NUMBER}
-$ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
-$ cd reports/lab${LAB_NUMBER}
-$ edit REPORT.md
-$ gist REPORT.md
-```
 
 ## Homework
 
@@ -163,9 +12,17 @@ $ gist REPORT.md
 Исходные файлы находятся в директории [formatter_lib](formatter_lib).
 В этой директории находятся файлы для статической библиотеки *formatter*.
 Создайте `CMakeList.txt` в директории [formatter_lib](formatter_lib),
-с помощью которого можно будет собирать статическую библиотеку *formatter*.  
-![Img 1](scrins/1.png)  
-![Img 2](scrins/2.png)  
+с помощью которого можно будет собирать статическую библиотеку *formatter*.   
+`CMakeList.txt` для  [formatter_lib](formatter_lib)  
+```sh
+cmake_minimum_required(VERSION 3.4) #минимально требуемая версия для для сборки CMake
+project(formatter) # название проекта
+
+set(CMAKE_CXX_STANDARD 11) # установка стандартов
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
+
+add_library(formatter STATIC formatter.cpp formatter.h)
+```
 
 ### Задание 2
 У компании "Formatter Inc." есть перспективная библиотека,
@@ -173,7 +30,20 @@ $ gist REPORT.md
 навыком созданием `CMakeList.txt` для статической библиотеки *formatter*, ваш 
 руководитель поручает заняться созданием `CMakeList.txt` для библиотеки 
 *formatter_ex*, которая в свою очередь использует библиотеку *formatter*.  
-![Img 4](scrins/4.png)  
+`CMakeList.txt` для  [formatter_ex_lib](formatter_ex__lib) 
+ ```sh
+cmake_minimum_required(VERSION 3.4) #минимально требуемая версия для для сборки CMake
+project(formatter_ex) # название проекта
+
+set(CMAKE_CXX_STANDARD 11) # установка стандартов
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
+
+add_library(formatter_ex STATIC formatter_ex.cpp formatter_ex.h) # сборка библиотеки
+
+target_include_directories(formatter_ex PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_lib)
+
+target_link_libraries(formatter_ex formatter)
+ ``` 
 
 
 ### Задание 3
@@ -181,9 +51,128 @@ $ gist REPORT.md
 Чтобы продемонстрировать как работать с библиотекой *formatter_ex*,
 вам необходимо создать два `CMakeList.txt` для двух простых приложений:
 * *hello_world*, которое использует библиотеку *formatter_ex*;
-* *solver*, приложение которое испольует статические библиотеки *formatter_ex* и *solver_lib*.  
-![Img 6](scrins/6.png)  
-![Img 7](scrins/7.png)
+* *solver*, приложение которое испольует статические библиотеки *formatter_ex* и *solver_lib*.    
+`CMakeList.txt` для  *hello_world*
+ ```sh
+cmake_minimum_required(VERSION 3.4) #минимально требуемая версия для для сборки CMake
+project(hello_world) # название проекта
+
+set(CMAKE_CXX_STANDARD 11) # установка стандартов
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
+
+add_executable(hello_world hello_world.cpp)
+target_include_directories(hello_world PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_ex_lib)
+target_link_libraries(hello_world formatter_ex) # указания, где находятся директории
+ ``` 
+ `CMakeList.txt` для  *solver_lib*
+ ```sh
+cmake_minimum_required(VERSION 3.4)
+project(solver)
+
+set(CMAKE_CXX_STANDARD 20) # установка стандартов
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
+
+add_library(solver STATIC solver.cpp solver.h)
+ ``` 
+ `CMakeList.txt` для  *solver_application*
+ ```sh
+cmake_minimum_required(VERSION 3.4)
+project(solver)
+
+set(CMAKE_CXX_STANDARD 11) # установка стандартов
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # установка стандартов
+add_executable(solve equation.cpp)
+target_include_directories(solve PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../formatter_ex_lib)
+target_include_directories(solve PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../solver_lib)
+target_link_libraries(solve formatter_ex)
+target_link_libraries(solve solver)
+ ``` 
+`CMakeList.txt` для  всего приложения
+ ```sh
+cmake_minimum_required(VERSION 3.4)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+project(cmake)
+
+add_subdirectory(formatter_lib)
+add_subdirectory(formatter_ex_lib)
+add_subdirectory(hello_world_application)
+add_subdirectory(solver_lib)
+add_subdirectory(solver_application)
+ ``` 
+### Задание Лабораторной работы № 4
+`cmake.yml` для  всего приложения
+ ```sh
+name: Formatter_app
+
+on:
+  push:
+    branches: 
+    - master
+
+jobs:
+  libraries:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: FormatterLib CMake
+      shell: bash
+      run: |
+        cd formatter_lib
+        cmake -H. -B_build
+        cmake --build _build
+    - name: FormatterExLib CMake
+      shell: bash
+      run: |
+        cd formatter_ex_lib
+        cmake -H. -B_build
+        cmake --build _build
+        
+    - name: SolverLib Cmake
+      shell: bash
+      run: |
+        cd solver_lib
+        cmake -H. -B_build
+        cmake --build _build
+        
+  Hello_world:
+  
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: HelloWorldApplication CMake
+      shell: bash
+      run: |
+        mkdir _build
+        cd _build
+        cmake ..
+        cmake --build .
+        cd hello_world_application
+        ./hello_world
+        
+  Solver:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: SolverApplication CMake
+      shell: bash
+      run: |
+        mkdir _build2
+        cd _build2
+        cmake ..
+        cmake --build .
+        cd solver_application
+        ./solve 2 -4 2
+ ``` 
 
 **Удачной стажировки!**
 
