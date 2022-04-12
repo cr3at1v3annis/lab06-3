@@ -65,5 +65,5 @@ jobs:
         cmake ..
         cmake --build .
         cd solver_application
-        ./solve 2 -4 2
+        ./solve 1 -2 1
       
