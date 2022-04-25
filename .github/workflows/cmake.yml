@@ -1,69 +1,207 @@
-name: Formatter_app
+name: CPack
 
 on:
   push:
-    branches: 
-    - master
+    tags:
+      - 'v*'
+
 
 jobs:
-  libraries:
-    
+  Upload_archive_files:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v2
 
-    - name: FormatterLib CMake
-      shell: bash
-      run: |
-        cd formatter_lib
-        cmake -H. -B_build
-        cmake --build _build
+      - name: Prepare environment
+        run: cmake --version
 
-    - name: FormatterExLib CMake
-      shell: bash
-      run: |
-        cd formatter_ex_lib
-        cmake -H. -B_build
-        cmake --build _build
-        
-    - name: SolverLib Cmake
-      shell: bash
-      run: |
-        cd solver_lib
-        cmake -H. -B_build
-        cmake --build _build
-        
-  Hello_world:
-  
+      - name: Build files
+        shell: bash
+        run: |
+          mkdir _build && cd _build
+          cmake -DFlag=ARC ..
+          cmake --build .
+          cpack
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Load binary and archive files
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            ./_build/solver-1.0.0-Linux.tar.gz
+            ./_build/solver-1.0.0-Linux.zip
+          asset_name: artifacts
+          asset_content_type: application/arch
+
+  Upload_RPM:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v2
-      
-    - name: HelloWorldApplication CMake
-      shell: bash
-      run: |
-        mkdir _build
-        cd _build
-        cmake ..
-        cmake --build .
-        cd hello_world_application
-        ./hello_world
-        
-  Solver:
+      - uses: actions/checkout@v2
+      - name: Prepare environment
+        run: sudo apt install git
+
+      - name: Build RPM
+        shell: bash
+        run: |
+          mkdir _build && cd _build
+          cmake -DFlag=RPM ..
+          cmake --build .
+          cpack
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Load binary and archive files
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            ./_build/solver-1.0.0-Linux.rpm
+          asset_name: solver.rpm
+          asset_content_type: application/rpm
+
+  Upload_DEB:
     runs-on: ubuntu-latest
-    
     steps:
-    - uses: actions/checkout@v2
-      
-    - name: SolverApplication CMake
-      shell: bash
-      run: |
-        mkdir _build2
-        cd _build2
-        cmake ..
-        cmake --build .
-        cd solver_application
-        ./solve 1 -2 1
-      
+      - uses: actions/checkout@v2
+      - name: Prepare environment
+        run: sudo apt install git
+
+      - name: Build DEB
+        shell: bash
+        run: |
+          mkdir _build && cd _build
+          cmake -DFlag=DEB ..
+          cmake --build .
+          cpack
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Load binary and archive files
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            ./_build/solver-1.0.0-Linux.deb
+          asset_name: solver.deb
+          asset_content_type: application/deb
+
+  Upload_DMG:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build DMG
+        shell: bash
+        run: |
+          mkdir _build && cd _build
+          cmake -DFlag=DMG ..
+          cmake --build .
+          cpack
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Load binary and archive files
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            ./_build/solver-1.0.0-Darwin.dmg
+          asset_name: solver.dmg
+          asset_content_type: application/dmg
+
+  Upload_MSI:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build MSI
+        shell: bash
+        run: |
+          mkdir _build && cd _build
+          cmake -DFlag=MSI ..
+          cmake --build .
+          cpack
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            Load binary and archive files
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: |
+            ./_build/solver-1.0.0-win64.msi
+          asset_name: solver.msi
+          asset_content_type: application/msi
