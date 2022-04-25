@@ -11,3 +11,4 @@ add_subdirectory(hello_world_application)
 add_subdirectory(solver_lib)
 add_subdirectory(solver_application)
 
+include(CPackConfig.cmake)
