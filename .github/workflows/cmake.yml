@@ -24,8 +24,7 @@ jobs:
           mkdir _build && cd _build
           cmake -DFlag=ARC ..
           cmake --build .
-          cpack -G TGZ
-          cpack -G ZIP
+          cpack 
 
       - name: Create Release
         id: create_release
