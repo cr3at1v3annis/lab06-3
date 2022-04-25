@@ -33,5 +33,4 @@ if (${Flag} MATCHES DMG)
     set(CPACK_GENERATOR "DragNDrop")
     install(TARGETS solver DESTINATION bin)
 endif()
-
 include(CPack)
